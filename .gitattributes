@@ -1,0 +1,2 @@
+*RTC filter=lfs diff=lfs merge=lfs -text
+WebRTC.framework/WebRTC filter=lfs diff=lfs merge=lfs -text
