@@ -18,12 +18,16 @@
 #define MESIBO_FLAG_TRANSIENT           0x4
 #define MESIBO_FLAG_FILETRANSFERRED     0x10000
 #define MESIBO_FLAG_FILEFAILED          0x20000
-#define MESIBO_FLAG_SENDLAZY            0x40000
+#define MESIBO_FLAG_QUEUE            0x40000
 //#define MESIBO_FLAG_SENDIFYOUCAN        0x40000
 #define MESIBO_FLAG_NONBLOCKING         0x80000
 #define MESIBO_FLAG_DONTSEND            0x200000
-#define MESIBO_FLAG_EOR                 0x800000
+#define MESIBO_FLAG_LASTMESSAGE                 0x800000
+#define MESIBO_FLAG_EORS                 0x4000000
 #define MESIBO_FLAG_DEFAULT             (MESIBO_FLAG_DELIVERYRECEIPT | MESIBO_FLAG_READRECEIPT)
+
+#define MESIBO_FLAG_SAVECUSTOM                 0x2000000
+
 
 #define MESIBO_FORMAT_DEFAULT           0
 #define MESIBO_FORMAT_HEX               1
@@ -48,11 +52,16 @@
 #define MESIBO_MSGSTATUS_READ           3
 #define MESIBO_MSGSTATUS_RECEIVEDNEW    0x12
 #define MESIBO_MSGSTATUS_RECEIVEDREAD   0x13
+#define MESIBO_MSGSTATUS_CALLMISSED     0x15
+#define MESIBO_MSGSTATUS_CALLINCOMING   0x16
+#define MESIBO_MSGSTATUS_CALLOUTGOING   0x17
+#define MESIBO_MSGSTATUS_CUSTOM         0x20
 #define MESIBO_MSGSTATUS_FAIL           0x80
 #define MESIBO_MSGSTATUS_USEROFFLINE    0x81
 #define MESIBO_MSGSTATUS_INBOXFULL      0x82
 #define MESIBO_MSGSTATUS_INVALIDDEST    0x83
 #define MESIBO_MSGSTATUS_EXPIRED        0x84
+
 
 #define MESIBO_RESULT_OK                0
 #define MESIBO_RESULT_FAIL              0x80
@@ -251,6 +260,21 @@
 -(void) setGroup:(uint32_t) group;
 
 -(BOOL) isIncoming;
+-(BOOL) isOutgoing;
+-(BOOL) isSavedMessage;
+-(BOOL) isMissedCall;
+-(BOOL) isCall;
+-(BOOL) isVoiceCall;
+-(BOOL) isVideoCall;
+-(BOOL) isPstnCall;
+-(BOOL) isLastMessage;
+
+-(BOOL) isDbMessage;
+-(BOOL) isDbSummaryMessage;
+-(BOOL) isDbPendingMessage;
+-(BOOL) isRealtimeMessage;
+
+
 
 -(BOOL) isMessageStatusFailed;
 
@@ -355,6 +379,47 @@
 -(NSObject *) getData;
 @end
 
+@interface MesiboReadSession : NSObject
++(void) addSession:(uint64_t)sessionid session:(id)session;
++(MesiboReadSession *)getSession:(uint64_t)sessionid ;
++(void)removeSession:(uint64_t)sessionid ;
++(BOOL)isSessionReading:(MesiboParams *)params ;
+-(void) initSession:(NSString*)peer groupid:(uint32_t)groupid query:(NSString *)query delegate:(id)listener;
+-(void)endSession ;
+
+
+-(BOOL) isReading:(MesiboParams *)params ;
+
+-(id) getDelegate:(uint32_t)flags;
+-(void) stop ;
+-(void) restart ;
+
+-(int) read:(int) count ;
+
+-(void) enableReadReceipt:(BOOL) enable ;
+
+-(void) disableReadReceipt:(BOOL) disable ;
+
+-(void) enableSummary:(BOOL) enable ;
+
+-(void) enableFifo:(BOOL) enable ;
+
+-(void) enableFiles:(BOOL) enable ;
+
+-(void) enableMessages:(BOOL) enable ;
+
+-(void) enableMissedCalls:(BOOL) enable ;
+
+-(void) enableIncomingCalls:(BOOL) enable ;
+
+-(void) enableOutgoingCalls:(BOOL) enable ;
+
+-(void) enableCalls:(BOOL) enable ;
+
+-(void) noRead ;
+
+@end
+
 #define MESIBO_HTTPSTATE_UPLOAD     0
 #define MESIBO_HTTPSTATE_DOWNLOAD   1
 #define MESIBO_HTTPSTATE_DONE       2
@@ -412,6 +477,7 @@ typedef BOOL (^Mesibo_onHTTPProgress)(MesiboHttp *http, int state, int progress)
 @property (nonatomic) BOOL resume;
 @property (nonatomic) BOOL noCache;
 @property (nonatomic) BOOL concatData;
+@property (nonatomic) BOOL notifyOnCompleteOnly;
 @property (nonatomic) BOOL onMainThread;
 
 @property (nonatomic) uint64_t ts;
@@ -429,6 +495,15 @@ typedef BOOL (^Mesibo_onHTTPProgress)(MesiboHttp *http, int state, int progress)
 @property (nonatomic) uint64_t offset;
 
 @property (nonatomic) NSString * respEncoding;
+@property (nonatomic) NSString * respDisposition;
+@property (nonatomic) NSString * respETag;
+@property (nonatomic) BOOL respCached;
+
+@property (nonatomic) long contentAge ;
+@property (nonatomic) long respFlag;
+
+
+
 
 @property (nonatomic) NSMutableData *data;
 
@@ -567,6 +642,7 @@ typedef void (^Mesibo_onRunHandler)(void);
 -(void) reset;
 -(BOOL) setPath:(NSString *)path;
 -(int) setAccessToken:(NSString *)accessToken;
+-(uint32_t) getAccessTokenValidity;
 -(int) setBufferLen:(int)length empty:(BOOL)empty;
 -(void) setSecureConnection:(BOOL) enable;
 
@@ -618,9 +694,7 @@ typedef void (^Mesibo_onRunHandler)(void);
 -(int) cancel:(int)type msgid:(uint32_t)msgid;
 
 //TBD, need to change to match with android
--(int) setReadingSession:(NSString *)from groupid:(uint32_t)groupid flag:(uint32_t)flag search:(NSString *)searchquery;
--(int) endReadingSession:(NSString *)from groupid:(uint32_t)groupid;
--(int) read:(id)delegate count:(int)count;
+
 -(BOOL) deleteMessage:(uint64_t)msgid ;
 -(BOOL) deleteMessages:(NSString *)sender groupid:(uint32_t)groupid ts:(uint64_t)ts;
 -(BOOL) deleteZombieMessages:(BOOL) groupOnly;
@@ -728,6 +802,8 @@ typedef void (^Mesibo_onRunHandler)(void);
  -(void) routeAudio:(int)route OnOrOff:(BOOL)state;
  -(int) getCharges:(float *)charge;
  */
+
+-(void *) getApi;
 @end
 
 #ifdef MESIBO_NOLOGS
