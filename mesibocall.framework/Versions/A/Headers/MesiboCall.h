@@ -73,6 +73,7 @@
 -(void) answer:(BOOL)video initialVideo:(BOOL)initialVideo;
 -(void) hangup;
 -(void) showCallInProgress;
+-(MesiboCallConfig *) getConfig;
 //-(void) checkPermission:(BOOL)video;
 -(void) test:(id)parent;
 
