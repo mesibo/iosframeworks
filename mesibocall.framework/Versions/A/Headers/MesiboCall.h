@@ -74,6 +74,7 @@
 -(void) hangup;
 -(void) showCallInProgress;
 -(MesiboCallConfig *) getConfig;
+-(void) resetProvider;
 //-(void) checkPermission:(BOOL)video;
 -(void) test:(id)parent;
 

@@ -1,6 +1,6 @@
 //
 //  Mesibo.h
-//  Copyright © 2015 Mesibo Inc. All rights reserved.
+//  Copyright © 2019 Mesibo Inc. All rights reserved.
 #pragma once
 
 #import <Foundation/Foundation.h>
@@ -16,6 +16,8 @@
 #define MESIBO_FLAG_DELIVERYRECEIPT     0x1
 #define MESIBO_FLAG_READRECEIPT         0x2
 #define MESIBO_FLAG_TRANSIENT           0x4
+#define MESIBO_FLAG_PRESENCE           0x8
+
 #define MESIBO_FLAG_FILETRANSFERRED     0x10000
 #define MESIBO_FLAG_FILEFAILED          0x20000
 #define MESIBO_FLAG_QUEUE            0x40000
@@ -52,6 +54,7 @@
 #define MESIBO_MSGSTATUS_READ           3
 #define MESIBO_MSGSTATUS_RECEIVEDNEW    0x12
 #define MESIBO_MSGSTATUS_RECEIVEDREAD   0x13
+#define MESIBO_MSGSTATUS_RECEIVEDDELETED   0x14
 #define MESIBO_MSGSTATUS_CALLMISSED     0x15
 #define MESIBO_MSGSTATUS_CALLINCOMING   0x16
 #define MESIBO_MSGSTATUS_CALLOUTGOING   0x17
@@ -61,6 +64,7 @@
 #define MESIBO_MSGSTATUS_INBOXFULL      0x82
 #define MESIBO_MSGSTATUS_INVALIDDEST    0x83
 #define MESIBO_MSGSTATUS_EXPIRED        0x84
+#define MESIBO_MSGSTATUS_BLOCKED        0x88
 
 
 #define MESIBO_RESULT_OK                0
@@ -175,6 +179,10 @@
 #define MESIBO_CALLFLAG_SLOWNETWORK             0x20
 #define MESIBO_CALLFLAG_MISSED                  0x1000
 
+#define MESIBO_DELETE_DEFAULT   -1
+#define MESIBO_DELETE_LOCAL     0
+#define MESIBO_DELETE_RECALL    1
+#define MESIBO_DELETE_REMOVE    2
 
 //Following CALL_STATUS_ are for internal use and for notifications
 #define MESIBO_CALLSTATUS_DUREXCEED             19
@@ -228,6 +236,9 @@
 -(BOOL) isSelfProfile;
 -(void) setUserFlag:(int)flag;
 -(int) getUserFlag;
+-(BOOL) isBlocked;
+-(void) blockMessages:(BOOL) enable;
+-(void) blockGroupMessages:(BOOL) enable;
 @end
 
 @interface MesiboParams : NSObject
@@ -262,6 +273,9 @@
 -(BOOL) isIncoming;
 -(BOOL) isOutgoing;
 -(BOOL) isSavedMessage;
+-(BOOL) isDeletedBySender;
+-(BOOL) isForwarded;
+-(BOOL) isPresence;
 -(BOOL) isMissedCall;
 -(BOOL) isCall;
 -(BOOL) isVoiceCall;
@@ -601,6 +615,8 @@ typedef void (^Mesibo_onRunHandler)(void);
 -(void) Mesibo_onLocation:(MesiboParams *)params location:(MesiboLocation *)location;
 -(void) Mesibo_onFile:(MesiboParams *)params file:(MesiboFileInfo *) file;
 
+-(void) Mesibo_OnPresence:(MesiboParams *)params data:(NSData *)data;
+
 -(BOOL) Mesibo_onCall:(uint32_t)peerid callid:(uint32_t)callid profile:(MesiboUserProfile *)profile flags:(uint64_t)flags;
 -(BOOL) Mesibo_onCallStatus:(uint32_t)peerid callid:(uint32_t)callid status:(int)status flags:(uint64_t)flags desc:(NSString *)desc;
 -(void) Mesibo_onServer:(int)type url:(NSString *)url username:(NSString *)username credential:(NSString *)credential;
@@ -695,6 +711,9 @@ typedef void (^Mesibo_onRunHandler)(void);
 
 //TBD, need to change to match with android
 
+-(int) deletePolicy:(int)maxRemoteDeleteInterval deleteType:(int)deleteType;
+-(BOOL) deleteMessages:(uint64_t *)msgids count:(int)count deleteType:(int)deleteType;
+-(BOOL) deleteMessage:(uint64_t)msgid deleteType:(int)deleteType;
 -(BOOL) deleteMessage:(uint64_t)msgid ;
 -(BOOL) deleteMessages:(NSString *)sender groupid:(uint32_t)groupid ts:(uint64_t)ts;
 -(BOOL) deleteZombieMessages:(BOOL) groupOnly;
