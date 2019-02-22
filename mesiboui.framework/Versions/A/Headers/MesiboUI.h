@@ -2,8 +2,7 @@
 //  MesiboUI.h
 //  MesiboUI
 //
-//  Created by Sarfaraz Halai on 06/10/16.
-//  Copyright © 2016 Sarfaraz Halai. All rights reserved.
+//  Copyright © 2018 Mesibo. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
