@@ -21,7 +21,6 @@
 #define MESIBO_FLAG_FILETRANSFERRED     0x10000
 #define MESIBO_FLAG_FILEFAILED          0x20000
 #define MESIBO_FLAG_QUEUE            0x40000
-//#define MESIBO_FLAG_SENDIFYOUCAN        0x40000
 #define MESIBO_FLAG_NONBLOCKING         0x80000
 #define MESIBO_FLAG_DONTSEND            0x200000
 #define MESIBO_FLAG_LASTMESSAGE                 0x800000
@@ -54,7 +53,6 @@
 #define MESIBO_MSGSTATUS_READ           3
 #define MESIBO_MSGSTATUS_RECEIVEDNEW    0x12
 #define MESIBO_MSGSTATUS_RECEIVEDREAD   0x13
-#define MESIBO_MSGSTATUS_RECEIVEDDELETED   0x14
 #define MESIBO_MSGSTATUS_CALLMISSED     0x15
 #define MESIBO_MSGSTATUS_CALLINCOMING   0x16
 #define MESIBO_MSGSTATUS_CALLOUTGOING   0x17
@@ -273,7 +271,7 @@
 -(BOOL) isIncoming;
 -(BOOL) isOutgoing;
 -(BOOL) isSavedMessage;
--(BOOL) isDeletedBySender;
+-(BOOL) isDeleted;
 -(BOOL) isForwarded;
 -(BOOL) isPresence;
 -(BOOL) isMissedCall;
@@ -378,6 +376,8 @@
 @end
 
 
+
+
 @interface MesiboLocation : NSObject
 @property (nonatomic) double lat;
 @property (nonatomic) double lon;
@@ -392,6 +392,39 @@
 -(void) setData:(NSObject *)data;
 -(NSObject *) getData;
 @end
+
+@interface MesiboMedia : NSObject
+@property (nonatomic) NSString *url;
+@property (nonatomic) NSString *title;
+@property (nonatomic) UIImage *image;
+
+@property (nonatomic) NSString *mimeType;
+@property (nonatomic) NSString *launchUrl;
+
+@property (nonatomic) double lat;
+@property (nonatomic) double lon;
+@property (nonatomic) int zoom;
+
+-(void) setData:(NSObject *)data;
+-(NSObject *) getData;
+@end
+
+// For internal use only - will be for public use from v2.0
+@interface MesiboMessage : NSObject
+@property (nonatomic) uint64_t mid;
+@property (nonatomic) NSData *message;
+
+@property (nonatomic) double lat;
+@property (nonatomic) double lon;
+
+@property (nonatomic) MesiboMedia *media;
+
+//Temporary - will be removed in v2.0
+@property (nonatomic) MesiboFileInfo *file;
+@property (nonatomic) MesiboLocation *location;
+@end
+
+
 
 @interface MesiboReadSession : NSObject
 +(void) addSession:(uint64_t)sessionid session:(id)session;
@@ -608,6 +641,7 @@ typedef void (^Mesibo_onRunHandler)(void);
 
 @optional
 -(void) Mesibo_OnMessage:(MesiboParams *)params data:(NSData *)data;
+-(void) Mesibo_OnMessage:(MesiboParams *)params message:(MesiboMessage *)message;
 -(void) Mesibo_OnMessageStatus:(MesiboParams *)params;
 -(void) Mesibo_OnConnectionStatus:(int) status;
 
@@ -789,7 +823,7 @@ typedef void (^Mesibo_onRunHandler)(void);
 
 
 + (void) Log:(const char*)sourceFile lineNumber:(int)lineNumber format:(NSString*)format, ...;
-
++ (void) Log:(NSString*)format, ...;
 
 -(void) setCallInterface:(int)type ci:(void *) ci;
 -(int) call:(NSString *)phone video:(BOOL)video;
