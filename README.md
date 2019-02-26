@@ -1,3 +1,7 @@
+## Mesibo Frameworks for iOS
+Visit https://mesibo.com for documentation.
+
+## Installation
 The Mesibo SDKs for iOS are available as CocoaPods pods OR individual frameworks that can be installed manually. 
 
 [CocoaPods](http://cocoapods.org) is an open source dependency manager for Swift and Objective-C Cocoa projects, which automates the process of using 3rd-party libraries like Mesibo in your projects. For details, see the [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
