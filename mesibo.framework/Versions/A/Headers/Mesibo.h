@@ -57,6 +57,10 @@
 #define MESIBO_MSGSTATUS_CALLINCOMING   0x16
 #define MESIBO_MSGSTATUS_CALLOUTGOING   0x17
 #define MESIBO_MSGSTATUS_CUSTOM         0x20
+
+// ONLY FOR UI USAGE
+#define MESIBO_MSGSTATUS_TIMESTAMP      0x30
+
 #define MESIBO_MSGSTATUS_FAIL           0x80
 #define MESIBO_MSGSTATUS_USEROFFLINE    0x81
 #define MESIBO_MSGSTATUS_INBOXFULL      0x82
@@ -226,6 +230,8 @@
 @property (nonatomic) NSObject *other;
 @property (nonatomic) uint64_t lastActiveTime;
 @property (nonatomic) BOOL lookedup;
+@property (nonatomic) int presenceType;
+@property (nonatomic) NSString *presence;
 
 -(void) toggleMute;
 -(BOOL) isMuted;
@@ -295,6 +301,8 @@
 -(void) setParams:(NSString *)peer groupid:(uint32_t)groupid flag:(uint32_t)flag origin:(int)origin;
 
 @end
+
+typedef MesiboUserProfile MesiboAddress;
 
 #define MESIBO_FILEACTION_START   0
 #define MESIBO_FILEACTION_STOP   1
@@ -394,6 +402,8 @@
 @end
 
 @interface MesiboMedia : NSObject
+
+#if 0
 @property (nonatomic) NSString *url;
 @property (nonatomic) NSString *title;
 @property (nonatomic) UIImage *image;
@@ -405,6 +415,12 @@
 @property (nonatomic) double lon;
 @property (nonatomic) int zoom;
 
+#else
+//Temporary - will be removed in v2.0
+@property (nonatomic) MesiboFileInfo *file;
+@property (nonatomic) MesiboLocation *location;
+#endif
+
 -(void) setData:(NSObject *)data;
 -(NSObject *) getData;
 @end
@@ -412,16 +428,71 @@
 // For internal use only - will be for public use from v2.0
 @interface MesiboMessage : NSObject
 @property (nonatomic) uint64_t mid;
+@property (nonatomic) uint64_t ts;
+@property (nonatomic) uint64_t mts;
+@property (nonatomic) int32_t expiry;
+@property (nonatomic) uint32_t flag;
+@property (nonatomic) int type;
+@property (nonatomic) int status;
+@property (nonatomic) int origin;
+
+@property (nonatomic) MesiboAddress *sender;
+@property (nonatomic) MesiboAddress *sendingGroup;
+
 @property (nonatomic) NSData *message;
 
+#if 0
 @property (nonatomic) double lat;
 @property (nonatomic) double lon;
+#endif
 
 @property (nonatomic) MesiboMedia *media;
 
-//Temporary - will be removed in v2.0
-@property (nonatomic) MesiboFileInfo *file;
-@property (nonatomic) MesiboLocation *location;
+@property (nonatomic) id other; //user data
+@property (nonatomic) id ui; //UI use only
+
+
+-(int) getStatus;
+-(void) setStatus:(int)status;
+-(int) getExpiry;
+-(void) setExpiry:(int)expiry;
+-(int) getType;
+-(void) setType:(int)type;
+-(void) setOrigin:(int)origin;
+
+-(BOOL) isIncoming;
+-(BOOL) isOutgoing;
+-(BOOL) isInOutbox;
+-(BOOL) isFailed;
+-(BOOL) isCustom;
+-(BOOL) isDeleted;
+-(BOOL) isForwarded;
+-(BOOL) isPresence;
+-(BOOL) isMissedCall;
+-(BOOL) isCall;
+-(BOOL) isVoiceCall;
+-(BOOL) isVideoCall;
+-(BOOL) isPstnCall;
+-(BOOL) isLastMessage;
+-(BOOL) isEmpty;
+-(BOOL) hasMedia;
+-(void) setDeleted;
+
+-(void) setLocation:(MesiboLocation *) location;
+-(void) setFile:(MesiboFileInfo *) file;
+
+-(NSString *) getMessageAsString;
+
+-(BOOL) isDbMessage;
+-(BOOL) isDbSummaryMessage;
+-(BOOL) isDbPendingMessage;
+-(BOOL) isRealtimeMessage;
+
+-(BOOL)compare:(NSString *)peer groupid:(uint32_t)groupid;
+
+-(NSString *) getSenderAddress;
+-(NSString *) getSenderName;
+-(uint32_t) getGroupId;
 @end
 
 
@@ -641,7 +712,10 @@ typedef void (^Mesibo_onRunHandler)(void);
 
 @optional
 -(void) Mesibo_OnMessage:(MesiboParams *)params data:(NSData *)data;
--(void) Mesibo_OnMessage:(MesiboParams *)params message:(MesiboMessage *)message;
+
+//Only for internal use now 
+-(void) Mesibo_OnMessage:(MesiboMessage *)message;
+
 -(void) Mesibo_OnMessageStatus:(MesiboParams *)params;
 -(void) Mesibo_OnConnectionStatus:(int) status;
 
@@ -763,7 +837,9 @@ typedef void (^Mesibo_onRunHandler)(void);
 -(BOOL) startFileTransfer:(MesiboFileInfo *)file;
 -(BOOL) stopFileTransfer:(MesiboFileInfo *) file;
 -(BOOL) updateFileTransferProgress:(MesiboFileInfo *)file progress:(int)progress status:(int)status;
--(BOOL) isFileTransferEnabled; //TBD, not implemented
+-(BOOL) isFileTransferEnabled;
+-(NSString *) getUploadUrl;
+-(BOOL) setUploadUrl;
 -(int) getFileType:(NSString *)path;
 
 //********************** User Profile *********************************************
