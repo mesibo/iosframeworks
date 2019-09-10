@@ -660,6 +660,7 @@ typedef BOOL (^Mesibo_onHTTPProgress)(MesiboHttp *http, int state, int progress)
 
 @property (copy, nonatomic) NSString *messageListTitle;
 @property (copy, nonatomic) NSString *userListTitle;
+@property (copy, nonatomic) NSString *createGroupTitle;
 @property (copy, nonatomic) NSString *selectContactTitle;
 @property (copy, nonatomic) NSString *selectGroupContactsTitle;
 @property (copy, nonatomic) NSString *forwardTitle;
