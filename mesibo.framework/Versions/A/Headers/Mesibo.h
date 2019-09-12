@@ -516,8 +516,6 @@ typedef MesiboUserProfile MesiboAddress;
 
 -(void) enableReadReceipt:(BOOL) enable ;
 
--(void) disableReadReceipt:(BOOL) disable ;
-
 -(void) enableSummary:(BOOL) enable ;
 
 -(void) enableFifo:(BOOL) enable ;
@@ -533,8 +531,6 @@ typedef MesiboUserProfile MesiboAddress;
 -(void) enableOutgoingCalls:(BOOL) enable ;
 
 -(void) enableCalls:(BOOL) enable ;
-
--(void) noRead ;
 
 @end
 
@@ -768,6 +764,7 @@ typedef void (^Mesibo_onRunHandler)(void);
 -(BOOL) setPath:(NSString *)path;
 -(int) setAccessToken:(NSString *)accessToken;
 -(int) setPushToken:(NSString *)pushToken;
+-(void) setPushRegistryCompletion:(void (^)(void))completion;
 -(uint32_t) getAccessTokenValidity;
 -(int) setBufferLen:(int)length empty:(BOOL)empty;
 -(void) setSecureConnection:(BOOL) enable;

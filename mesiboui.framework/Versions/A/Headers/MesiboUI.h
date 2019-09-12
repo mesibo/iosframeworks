@@ -11,18 +11,19 @@
 #import "Mesibo/Mesibo.h"
 //#import "UITableViewWithReloadCallback.h"
 
+@interface MesiboCell : UITableViewCell {
+    
+}
+@end
 
 @protocol MesiboMessageViewDelegate <NSObject>
 @required
 - (UITableView *) getMesiboTableView;
 - (CGFloat)MesiboTableView:(UITableView *)tableView heightForMessage:(MesiboMessage *)message;
-- (UITableViewCell *)MesiboTableView:(UITableView *)tableView cellForMessage:(MesiboMessage *)message;
-- (UITableViewCell *)MesiboTableView:(UITableView *)tableView show:(MesiboMessage *)message;
+- (MesiboCell *)MesiboTableView:(UITableView *)tableView cellForMessage:(MesiboMessage *)message;
+- (MesiboCell *)MesiboTableView:(UITableView *)tableView show:(MesiboMessage *)message;
 @optional
 @end
-
-
-
 
 
 @interface MesiboUI : NSObject
