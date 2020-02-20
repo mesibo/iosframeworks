@@ -8,6 +8,8 @@ The Mesibo SDKs for iOS are available as CocoaPods pods OR individual frameworks
 
 If you prefer to install manually, you can click [here](#install-manually).
 
+> Whatever the method you prefer, ensure that [git lfs](https://git-lfs.github.com/) is installed before you proceed. 
+
 ## Install Using CocoaPods
 If you already have the CocoaPods tool, skip to Step 2. 
 

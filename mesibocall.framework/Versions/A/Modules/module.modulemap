@@ -1,4 +1,4 @@
-framework module audiocall {
+framework module MesiboCall {
 umbrella header "add your headers.h"
 
  module * { export * }

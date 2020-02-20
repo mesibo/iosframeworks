@@ -808,6 +808,8 @@ typedef void (^Mesibo_onRunHandler)(void);
 
 -(int) sendMessage:(MesiboParams *)p msgid:(uint32_t)msgid data:(NSData *)data;
 -(int) sendMessage:(MesiboParams *)p msgid:(uint32_t)msgid string:(NSString *)string;
+-(int) addCustomMessage:(MesiboParams *)p msgid:(uint32_t)msgid data:(NSData *)data;
+-(int) addCustomMessage:(MesiboParams *)p msgid:(uint32_t)msgid string:(NSString *)string;
 -(int) sendFile:(MesiboParams *)p msgid:(uint32_t)msgid file:(MesiboFileInfo *)file;
 -(int) sendLocation:(MesiboParams *)p msgid:(uint32_t)msgid location:(MesiboLocation *) location;
 //TBD, add title also (already have message)
