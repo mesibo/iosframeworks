@@ -1,5 +1,5 @@
 framework module MesiboCall {
-umbrella header "add your headers.h"
+umbrella header "MesiboCall.h"
 
  module * { export * }
 
