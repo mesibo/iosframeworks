@@ -36,6 +36,8 @@
 #define MESIBOCALL_VIDEOSOURCE_CAMERAREAR           2
 #define MESIBOCALL_VIDEOSOURCE_SCREEN               4
 
+//forward declaration
+//@protocol MesiboCallInProgressListener;
 
 @interface MesiboCallNotification : NSObject
 @property (nonatomic) NSString * _Nullable title;
@@ -79,6 +81,7 @@
 @property (nonatomic) UIImage * _Nullable userImage;
 @property (nonatomic) UIImage * _Nullable userImageSmall;
 @property (nonatomic) BOOL showScreenSharing;
+@property (nonatomic) id _Nullable inProgressListener; // only a few listeners will be invoked
 @end
 
 @interface MesiboCallProperties : NSObject
@@ -266,6 +269,7 @@ typedef void (^MesiboPermissionBlock)(BOOL granted);
 -(BOOL) isAppInBackground;
 -(BOOL) isCallKitAllowed; 
 -(BOOL) enableCallKit:(BOOL)detectRegulatoryRestrictions icon:(UIImage *_Nonnull)icon;
+-(void) enablePushKit:(BOOL) enable; // mandatory call
 
 +(UIImage * _Nullable) getImage:(NSBundle * _Nonnull)bundle name:(NSString * _Nonnull)name;
 +(UIImage * _Nullable) getColoredImage:(NSBundle * _Nonnull)bundle name:(NSString * _Nonnull)name color:(UIColor * _Nullable)color;
