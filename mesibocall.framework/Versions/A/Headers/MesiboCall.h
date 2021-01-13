@@ -81,6 +81,7 @@
 @property (nonatomic) UIImage * _Nullable userImage;
 @property (nonatomic) UIImage * _Nullable userImageSmall;
 @property (nonatomic) BOOL showScreenSharing;
+@property (nonatomic) BOOL autoHideControls;
 @property (nonatomic) id _Nullable inProgressListener; // only a few listeners will be invoked
 @end
 
@@ -277,6 +278,8 @@ typedef void (^MesiboPermissionBlock)(BOOL granted);
 +(BOOL) checkPermissions:(BOOL)video handler:(MesiboPermissionBlock _Nonnull) handler;
 
 -(void) setDefaultUiParent:(id _Nonnull)parent;
+-(void) setDefaultUiProperties:(MesiboCallUiProperties * _Nullable)properties;
+-(MesiboCallUiProperties * _Nullable)getDefaultUiProperties;
 -(void) setDefaultUiTitle:(NSString * _Nonnull)name;
 -(NSString * _Nonnull) getDefaultUiTitle;
 
