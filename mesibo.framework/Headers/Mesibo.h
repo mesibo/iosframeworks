@@ -262,6 +262,7 @@
 @property (nonatomic) uint32_t flag;
 @property (nonatomic) int type;
 @property (nonatomic) int status;
+@property (nonatomic) int statusFlags;
 @property (nonatomic) int origin;
 
 @property (nonatomic) NSString *enckey;
@@ -303,6 +304,7 @@
 
 
 -(BOOL) isMessageStatusFailed;
+-(BOOL) isMessageStatusInProgress;
 
 
 // WARNING - not to be used directly - (private function)
