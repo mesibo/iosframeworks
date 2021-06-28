@@ -62,6 +62,10 @@
 @property (assign, nonatomic) int mToolbarTextColor;
 @property (assign, nonatomic) int mUserListTypingIndicationColor;
 @property (assign, nonatomic) int mUserListStatusColor;
+@property (assign, nonatomic) int messageBackgroundColorForMe;
+@property (assign, nonatomic) int messageBackgroundColorForPeer;
+@property (assign, nonatomic) int messagingBackgroundColor;
+
 
 @property (assign, nonatomic) uint64_t mTypingIndicationTimeMs;
 
@@ -83,12 +87,12 @@
 
 +(UIImage *) getDefaultImage:(BOOL) group;
 
-+(void) launchMessageViewController:(UIViewController *) parent profile:(MesiboUserProfile*)profile ;
++(void) launchMessageViewController:(UIViewController *) parent profile:(MesiboProfile*)profile ;
 
 +(MesiboUiOptions *) getUiOptions;
 +(void) setUiOptions:(MesiboUiOptions *)options;
 
-+(void) launchMessageViewController:(UIViewController *) parent profile:(MesiboUserProfile*)profile uidelegate:(id)uidelegate;
++(void) launchMessageViewController:(UIViewController *) parent profile:(MesiboProfile*)profile uidelegate:(id)uidelegate;
 
 //+(void) getUITableViewInstance:(UITableViewWithReloadCallback *) table;
 
