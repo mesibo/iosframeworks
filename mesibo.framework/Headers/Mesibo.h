@@ -269,6 +269,10 @@
 
 @class MesiboGroupProfile; // foward declaration
 @protocol MesiboProfileDelegate;
+@class MesiboParams;
+@class MesiboReadSession;
+@class MesiboFileInfo;
+@class MesiboLocation;
 
 @interface MesiboProfile : NSObject
 
@@ -349,6 +353,19 @@
 -(BOOL) save;
 
 -(MesiboGroupProfile *) getGroupProfile;
+
+/* Messaging Functions */
+-(void) setMessageParams:(MesiboParams *)params;
+-(MesiboParams *) getMessageParams;
+-(int) sendMessage:(uint32_t)msgid data:(NSData *)data;
+-(int) sendMessage:(uint32_t)msgid string:(NSString *)string;
+-(int) sendFile:(uint32_t)msgid file:(MesiboFileInfo *)file;
+-(int) sendLocation:(uint32_t)msgid location:(MesiboLocation *) location;
+-(int) sendPresence:(uint32_t)msgid presence:(int)presence interval:(int)interval;
+-(int) sendActivity:(uint32_t)msgid activity:(int)activity interval:(int)interval;
+-(int) forwardMessage:(uint32_t)msgid forwardid:(uint64_t)forwardid;
+-(MesiboReadSession *) createReadSession:(id) delegate;
+-(BOOL) isReading;
 
 @end
 
